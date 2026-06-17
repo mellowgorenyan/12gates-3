@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>History of Java Programming Timeline</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    *, *::after, *::before { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width:100%; height:100%; overflow:hidden; font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; background:#D8BD8F; color:#333; }
+    .ht-wrap { width:100vw; height:100vh; display:flex; flex-direction:column; }
+    .ht-title { text-align:center; color:#fff8e7; background:#c19a6b; padding:16px 20px; font-size:clamp(13px,2.5vw,18px); font-weight:700; letter-spacing:2px; text-transform:uppercase; flex-shrink:0; }
+    .ht-outer { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:28px 0; overflow:hidden; }
+    .ht-track-container { width:100%; max-width:780px; padding:0 52px; box-sizing:border-box; position:relative; }
+    .ht-track { position:relative; height:90px; }
+    .ht-line { position:absolute; top:44px; left:0; right:0; height:2px; background:#e0cdb0; }
+    .ht-fill { position:absolute; top:0; left:0; height:100%; background:#c19a6b; transform:scaleX(0); transform-origin:left center; transition:transform 0.3s; }
+    .ht-anchors { position:absolute; top:0; left:0; right:0; height:100%; }
+    .ht-anchors a { position:absolute; bottom:0; text-align:center; font-size:clamp(10px,1.5vw,13px); padding-bottom:14px; color:#333; text-decoration:none; white-space:nowrap; transform:translateX(-50%); }
+    .ht-anchors a::after { content:''; position:absolute; left:50%; transform:translateX(-50%); bottom:-5px; height:12px; width:12px; border-radius:50%; border:2px solid #e0cdb0; background:#fff8e7; transition:background 0.3s,border-color 0.3s; }
+    .ht-anchors a:hover::after, .ht-anchors a.selected::after { background:#c19a6b; border-color:#c19a6b; }
+    .ht-anchors a.older::after { border-color:#c19a6b; }
+    .ht-nav { position:absolute; top:50%; transform:translateY(-50%); width:36px; height:36px; border-radius:50%; border:1.5px solid #c19a6b; background:#fff8e7; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#c19a6b; font-size:18px; transition:background 0.2s,color 0.2s; z-index:3; }
+    .ht-nav:hover { background:#c19a6b; color:#fff8e7; }
+    .ht-nav.inactive { opacity:0.3; cursor:not-allowed; pointer-events:none; }
+    .ht-prev { left:4px; }
+    .ht-next { right:4px; }
+    .ht-content { width:100%; max-width:680px; position:relative; overflow:hidden; margin-top:8px; }
+    .ht-content li { list-style:none; padding:0 5%; }
+    .ht-content li.hidden { display:none; }
+    .ht-icon { width:clamp(44px,7vw,60px); height:clamp(44px,7vw,60px); border-radius:50%; border:2px solid #c19a6b; display:flex; align-items:center; justify-content:center; margin:0 auto 12px; font-size:clamp(16px,3vw,24px); color:#c19a6b; background:#fff8e7; }
+    .ht-year { font-size:clamp(26px,5vw,44px); font-weight:700; color:#333; text-align:center; margin:0 0 6px; }
+    .ht-evtitle { font-size:clamp(13px,2vw,17px); font-weight:700; text-align:center; margin:0 0 10px; color:#c19a6b; }
+    .ht-desc { font-size:clamp(12px,1.6vw,15px); color:#333; line-height:1.75; text-align:center; }
+    .ht-dots { display:flex; justify-content:center; gap:8px; padding:18px 0 0; }
+    .ht-dot { width:8px; height:8px; border-radius:50%; background:#e0cdb0; border:none; cursor:pointer; transition:background 0.3s,transform 0.2s; padding:0; }
+    .ht-dot.active { background:#c19a6b; transform:scale(1.3); }
+  </style>
+</head>
+<body>
+
+<div class="ht-wrap">
+  <div class="ht-title">History of Java Programming</div>
+  <div class="ht-outer">
+
+    <div class="ht-track-container">
+      <button class="ht-nav ht-prev inactive" id="htPrev">&#8249;</button>
+      <button class="ht-nav ht-next" id="htNext">&#8250;</button>
+      <div class="ht-track">
+        <div class="ht-line"><span class="ht-fill" id="htFill"></span></div>
+        <div class="ht-anchors" id="htAnchors"></div>
+      </div>
+    </div>
+
+    <ol class="ht-content" id="htContent"></ol>
+    <div class="ht-dots" id="htDots"></div>
+
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+<script>
+const events = [
+  { year:'1991', title:'The Beginning',      icon:'fa-mug-hot',        desc:'James Gosling and his team at Sun Microsystems start the "Green Project" to develop a new programming language designed for embedded systems and consumer electronics. <br> <br> Oracle Java History' },
+  { year:'1995', title:'Java is Born',        icon:'fa-magnifying-glass',desc:'Java is officially released by Sun Microsystems. The iconic slogan "Write Once, Run Anywhere" is introduced, capturing the platform independence vision of the language. <br> <br> Java Version History' },
+  { year:'1996', title:'Java 1.0',            icon:'fa-earth-americas',  desc:'The first official version, Java 1.0, is released with core features and standard libraries, enabling developers to build applets and applications. <br> <br> Oracle Java SE 5 Features' },
+  { year:'1997', title:'Java 1.1',            icon:'fa-mug-saucer',      desc:'Java 1.1 is released, improving performance and adding inner classes, JDBC support for database connectivity, and JavaBeans component architecture.<br><br> Oracle Java SE 7 Release Notes' },
+  { year:'1998', title:'Java 1.2',            icon:'fa-shield-halved',   desc:'Major update with new features like Swing GUI, Collections Framework, and better security..<br><br> Oracle Java SE 9 Release Notes' },
+  { year:'2004', title:'Java 5',              icon:'fa-code',            desc:'Introduced generics, enhanced for-loops, and annotations making a big step forward.<br><br> James Gosling - Creator of Java' },
+  { year:'2010', title:'Java 7',              icon:'fa-cloud',           desc:'Improved performance and productivity with new features and simplified syntax.<br> <br>  Sun Microsystems {Original Developer of Java}' },
+  { year:'2017', title:'Java 9 and Beyond',   icon:'fa-rocket',          desc:'Java 9 introduces the module system and continues to evolve with new features in later versions.<br> <br> Oracle Corporation {Curremt Owner of Java}' }
+];
+
+const n          = events.length;
+const anchorsEl  = document.getElementById('htAnchors');
+const fillEl     = document.getElementById('htFill');
+const contentEl  = document.getElementById('htContent');
+const dotsEl     = document.getElementById('htDots');
+const prevBtn    = document.getElementById('htPrev');
+const nextBtn    = document.getElementById('htNext');
+let current      = 0;
+
+const anchors = events.map((ev, i) => {
+  const a = document.createElement('a');
+  a.href = '#';
+  a.textContent = ev.year;
+  a.dataset.idx = i;
+  a.style.left = (i / (n - 1) * 100) + '%';
+  if (i === 0) a.classList.add('selected');
+  anchorsEl.appendChild(a);
+  return a;
+});
+
+const panels = events.map((ev, i) => {
+  const li = document.createElement('li');
+  li.innerHTML = `
+    <div class="ht-icon"><i class="fa-solid ${ev.icon}"></i></div>
+    <div class="ht-year">${ev.year}</div>
+    <div class="ht-evtitle">${ev.title}</div>
+    <div class="ht-desc">${ev.desc}</div>`;
+  if (i !== 0) li.classList.add('hidden');
+  contentEl.appendChild(li);
+  return li;
+});
+
+const dots = events.map((_, i) => {
+  const btn = document.createElement('button');
+  btn.className = 'ht-dot' + (i === 0 ? ' active' : '');
+  btn.addEventListener('click', () => goTo(i));
+  dotsEl.appendChild(btn);
+  return btn;
+});
+
+function updateFill(idx) {
+  fillEl.style.transform = 'scaleX(' + (idx / (n - 1)) + ')';
+}
+
+function goTo(idx) {
+  if (idx === current) return;
+  anchors[current].classList.remove('selected');
+  panels[current].classList.add('hidden');
+  dots[current].classList.remove('active');
+  anchors.forEach((a, i) => a.classList.toggle('older', i < idx));
+  current = idx;
+  anchors[current].classList.add('selected');
+  panels[current].classList.remove('hidden');
+  dots[current].classList.add('active');
+  updateFill(current);
+  prevBtn.classList.toggle('inactive', current === 0);
+  nextBtn.classList.toggle('inactive', current === n - 1);
+}
+
+anchors.forEach((a, i) => {
+  a.addEventListener('click', e => { e.preventDefault(); goTo(i); });
+});
+
+prevBtn.addEventListener('click', () => { if (current > 0) goTo(current - 1); });
+nextBtn.addEventListener('click', () => { if (current < n - 1) goTo(current + 1); });
+
+document.addEventListener('keyup', e => {
+  if (e.key === 'ArrowRight' && current < n - 1) goTo(current + 1);
+  if (e.key === 'ArrowLeft'  && current > 0)     goTo(current - 1);
+});
+
+let touchStartX = 0;
+contentEl.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+contentEl.addEventListener('touchend',   e => {
+  const diff = touchStartX - e.changedTouches[0].clientX;
+  if (diff >  40 && current < n - 1) goTo(current + 1);
+  if (diff < -40 && current > 0)     goTo(current - 1);
+}, { passive: true });
+
+updateFill(0);
+</script>
+
+</body>
+</html>
